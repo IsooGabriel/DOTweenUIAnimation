@@ -5,12 +5,18 @@ using UnityEngine.UI;
 public class ImageAnimation_Gabu : UISystem_Gabu
 {
     #region 変数
+    [SerializeField, Header("画像")]
     protected Image image;
 
+    [SerializeField, Header("基本色")]
     protected Color _normalColor;
+    [SerializeField, Header("カーソルが上にいる時の色")]
     protected Color _highlightedColor;
+    [SerializeField, Header("押されている時の色")]
     protected Color _pressedColor;
+    [SerializeField, Header("選択している時の色")]
     protected Color _selectedColor;
+    [SerializeField, Header("無効な時の色")]
     protected Color _disabledColor;
 
     #endregion
@@ -22,7 +28,10 @@ public class ImageAnimation_Gabu : UISystem_Gabu
         {
             return;
         }
-        _disabledImage.color = new Color(1f, 1f, 1f, 0f);
+        if (_disabledImage != null)
+        {
+            _disabledImage.color = new Color(0f, 0f, 0f, 0f);
+        }
 
         _transform.DOScale(_unitScale * _normalScaleMultiplier, _normalScaleDuration).SetEase(_normalEase);
         image.DOColor(_normalColor, _normalScaleDuration);
@@ -34,10 +43,13 @@ public class ImageAnimation_Gabu : UISystem_Gabu
         {
             return;
         }
-        _disabledImage.color = new Color(1f, 1f, 1f, 0f);
+        if (_disabledImage != null)
+        {
+            _disabledImage.color = new Color(0f, 0f, 0f, 0f);
+        }
 
         _transform.DOScale(_unitScale * _highlightedScaleMultiplier, _highlightedScaleDuration).SetEase(_highlightedEase);
-        image.DOColor(_isMonochrome ? SubtractionHSV(_color, 0f, 1f, -0.4f) : SubtractionHSV(_color, 0f, -0.4f, -0.4f), _highlightedScaleDuration);
+        image.DOColor(_highlightedColor, _highlightedScaleDuration);
     }
 
     protected override void PressedAnimation()
@@ -46,10 +58,13 @@ public class ImageAnimation_Gabu : UISystem_Gabu
         {
             return;
         }
-        _disabledImage.color = new Color(1f, 1f, 1f, 0f);
+        if (_disabledImage != null)
+        {
+            _disabledImage.color = new Color(0f, 0f, 0f, 0f);
+        }
 
         _transform.DOScale(_unitScale * _pressedScaleMultiplier, _pressedScaleDuration).SetEase(_pressedEase);
-        image.DOColor(_isMonochrome ? SubtractionHSV(_color, 0f, 1f, 0.5f) : SubtractionHSV(_color, 0f, -0.2f, 0.5f), _pressedScaleDuration);
+        image.DOColor(_pressedColor, _pressedScaleDuration);
     }
 
     protected override void SelectedAnimation()
@@ -58,10 +73,13 @@ public class ImageAnimation_Gabu : UISystem_Gabu
         {
             return;
         }
-        _disabledImage.color = new Color(1f, 1f, 1f, 0f);
+        if (_disabledImage != null)
+        {
+            _disabledImage.color = new Color(0f, 0f, 0f, 0f);
+        }
 
         _transform.DOScale(_unitScale * _selectedScaleMultiplier, _selectedScaleDuration).SetEase(_selectedEase);
-        image.DOColor(_isMonochrome ? SubtractionHSV(_color, 0f, 1f, -0.2f) : SubtractionHSV(_color, 0f, -0.2f, -0.2f), _selectedScaleDuration);
+        image.DOColor(_selectedColor, _selectedScaleDuration);
     }
 
     protected override void DisabledAnimation()
@@ -72,10 +90,19 @@ public class ImageAnimation_Gabu : UISystem_Gabu
         }
 
         _transform.DOScale(_unitScale * _disabledScaleMultiplier, _disabledScaleDuration).SetEase(_disabledEase);
-        image.DOColor(_isMonochrome ? SubtractionHSV(_color, 0f, 1f, 0.7f) : SubtractionHSV(_color, 0f, 0.7f, 0.7f), _disabledScaleDuration);
+        image.DOColor(_disabledColor, _disabledScaleDuration);
 
-        _disabledImage.DOColor(new Color(1, 1, 1, 0.6f), _disabledScaleDuration).SetEase(_disabledEase);
+        if (_disabledImage != null)
+        {
+            _disabledImage.DOColor(new Color(0f, 0f, 0f, 0.7f), _disabledScaleDuration).SetEase(_disabledEase);
+        }
     }
+
+    public void SetPpuMultiplier(float value)
+    {
+        image.pixelsPerUnitMultiplier = value;
+    }
+
     #endregion
 
     // ヌルチェック、数値代入、色代入
